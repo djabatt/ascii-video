@@ -1,7 +1,21 @@
-```javascript
+const density = "█▓▒░:1234567-.            ";
+
+let video;
+let asciiGraphics;
+
+function setup() {
+  createCanvas(128 * 6, 96 * 6); // Create a canvas with 6 times the video size
+  video = createCapture(VIDEO);
+  video.size(128, 96); // Set the resolution of the video capture
+  video.hide(); // Hide the video element
+  asciiGraphics = createGraphics(128 * 6, 96 * 6); // Create a graphics buffer for ASCII characters
+  asciiGraphics.textSize(6); // Set the text size for ASCII characters
+}
+
 function draw() {
+  background(0);
   video.loadPixels();
-  let asciiImage = "";
+  asciiGraphics.background(0, 0);
   for (let j = 0; j < video.height; j++) {
     for (let i = 0; i < video.width; i++) {
       const pixelIndex = (i + j * video.width) * 4;
@@ -14,16 +28,11 @@ function draw() {
       const c = density.charAt(charIndex);
 
       // Set the color of the ASCII character
-      const color = `rgb(${r}, ${g}, ${b})`;
+      asciiGraphics.fill(r, g, b);
 
-      if (c == " ") {
-        asciiImage += "&nbsp;";
-      } else {
-        asciiImage += `<span style="color: ${color};">${c}</span>`;
-      }
+      // Draw the ASCII character on the graphics buffer
+      asciiGraphics.text(c, i * 6, j * 6);
     }
-    asciiImage += '<br/>';
   }
-  asciiDiv.html(asciiImage);
+  image(asciiGraphics, 0, 0); // Draw the graphics buffer on the canvas
 }
-```
